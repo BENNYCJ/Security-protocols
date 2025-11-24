@@ -1,0 +1,30 @@
+name: CISO Governance Bot
+
+# The Trigger: Wake up on every Push or Pull Request to main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# The Work: What the robot actually does
+jobs:
+  compliance-check:
+    runs-on: ubuntu-latest  # The robot runs on a Linux server provided by GitHub
+
+    steps:
+      # Step 1: Download the code to the robot's server
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Run a script to look for the file
+      - name: Verify Security Protocol
+        run: |
+          echo "🔍 Starting CISO Compliance Scan..."
+          if [ -f "PROTOCOL.md" ]; then
+            echo "✅ Success: Security Protocol found."
+          else
+            echo "❌ CRITICAL ERROR: PROTOCOL.md is missing!"
+            echo "👮 The CISO forbids this merge."
+            exit 1
+          fi
